@@ -15,7 +15,8 @@ public class myDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL("CREATE TABLE stuff");
+		String createStatement = "CREATE TABLE IF NOT EXISTS testTable (text surname PRIMARY KEY, text forename);";
+		db.execSQL(createStatement);
 	}
 
 	@Override

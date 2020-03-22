@@ -13,21 +13,31 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
 	Button saveTime;
+	Button displayTime;
+	TextView dateOutput;
+	//myDatabase databaseToUse = new myDatabase(null);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		saveTime = (Button) this.findViewById(R.id.saveTime);
+		displayTime = (Button) this.findViewById(R.id.displayTime);
+		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
 	}
 
 	public void onClick(View v) {
@@ -38,7 +48,27 @@ public class MainActivity extends AppCompatActivity {
 			} else {
 				Log.e("Message", "Cannot write to fs");
 			}
+		} else if (v.getId() == R.id.displayTime) {
+			this.displayTime();
 		}
+	}
+
+	public void displayTime() {
+
+		File file = new File(Environment.getExternalStorageDirectory(), "filename.txt");
+		ArrayList<String> readLines = new ArrayList<>();
+		try {
+			Scanner in = new Scanner(file);
+			while (in.hasNextLine()) {
+				readLines.add(in.nextLine());
+			}
+			in.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		dateOutput.setText(readLines.get(0));
+
 	}
 
 	public void checkPermissions() {
@@ -67,7 +97,12 @@ public class MainActivity extends AppCompatActivity {
 		String filneame = "filename.txt";
 		File file = new File(Environment.getExternalStorageDirectory(), filneame);
 		FileOutputStream fos;
-		byte[] data = new String("Data to write to file").getBytes();
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//Date dateToConvert = new Date(System.currentTimeMillis());
+		String dateToWrite = formatter.format(System.currentTimeMillis());
+
+		byte[] data = new String(dateToWrite).getBytes();
 
 		try {
 			fos = new FileOutputStream(file);
@@ -93,13 +128,14 @@ public class MainActivity extends AppCompatActivity {
 		return false;
 	}
 
+	/*
 	public void insertDummyData(SQLiteDatabase db) {
 		ContentValues values = new ContentValues();
 		values.put("forename", "Jonathan");
 		values.put("surname", "Sifleet");
 		values.put("extension", 3531);
 
-		//dont worry about the 2nd parameter being null
+		// don't worry about the 2nd parameter being null
 		// returns the last insert id
 		long insertId = db.insert("phonedirectory", null, values);
 
@@ -117,13 +153,14 @@ public class MainActivity extends AppCompatActivity {
 		Cursor resultSet = db.rawQuery(sql, params);
 
 		resultSet.moveToFirst(); // must inclide
-		while(!resultSet.isAfterLast()) {
+		while (!resultSet.isAfterLast()) {
 			String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
 			String surname = resultSet.getString(resultSet.getColumnIndex("surname"));
 
 			resultSet.moveToNext();
 		}
 	}
+	*/
 
 }
 
