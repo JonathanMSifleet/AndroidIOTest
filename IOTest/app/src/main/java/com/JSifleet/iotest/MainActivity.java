@@ -67,6 +67,10 @@ public class MainActivity extends AppCompatActivity {
 			e.printStackTrace();
 		}
 
+		for (String line : readLines) {
+			Log.e("Debug message", line);
+		}
+
 		dateOutput.setText(readLines.get(0));
 
 	}
