@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 	Button displayTime;
 	TextView dateOutput;
 	myDatabase databaseToUse;
+	Button readDatabase;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 		saveTime = (Button) this.findViewById(R.id.saveTime);
 		displayTime = (Button) this.findViewById(R.id.displayTime);
 		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
+		readDatabase = (Button) this.findViewById(R.id.readDatabase);
 	}
 
 	public void onClick(View v) {
@@ -48,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 			this.displayTime();
 		} else if (v.getId() == R.id.createDatabase) {
 			this.handleDatabase();
+		} else if (v.getId() == R.id.readDatabase) {
+			this.getSurname(databaseToUse.db);
 		}
 	}
 
@@ -133,44 +140,50 @@ public class MainActivity extends AppCompatActivity {
 		try {
 			databaseToUse = new myDatabase(this);
 			Log.e("Message", "Database created");
+			this.insertDummyData(databaseToUse.db);
 		} catch (Exception e) {
 			Log.e("Message", "error");
 		}
 	}
 
-	/*
 	public void insertDummyData(SQLiteDatabase db) {
-		ContentValues values = new ContentValues();
-		values.put("forename", "Jonathan");
-		values.put("surname", "Sifleet");
-		values.put("extension", 3531);
 
-		// don't worry about the 2nd parameter being null
-		// returns the last insert id
-		long insertId = db.insert("phonedirectory", null, values);
+		try {
+			ContentValues values = new ContentValues();
+			values.put("surname", "Sifleet");
+			values.put("forename", "Jonathan");
 
-		// or for an update - returns # of rows updated
-		// third parameter is the WHERE clause:
-		int rows = db.update("phonedirectory", values, "id = 1", null);
+			// don't worry about the 2nd parameter being null
+			// returns the last insert id
+			long insertId = db.insert("testTable", null, values);
+
+			// or for an update - returns # of rows updated
+			// third parameter is the WHERE clause:
+			int rows = db.update("testTable", values, null, null);
+			Log.e("Message", "Data inserted successfully");
+		} catch (Exception e) {
+			Log.e("Message", "Error inserting data");
+		}
 	}
 
-	public void performSillyQuery(SQLiteDatabase db) {
-		String sql = "SELECT this FROM there WHERE something = ? AND somethingelse = ?;";
-		String[] params = new String[2];
+	public void getSurname(SQLiteDatabase db) {
+		String sql = "SELECT surname FROM testTable;"; //" WHERE something = ? AND somethingelse = ?;";
+		/* String[] params = new String[2];
 		params[0] = "firstParameterValue";
-		params[1] = "42";
+		params[1] = "42"; */
 
-		Cursor resultSet = db.rawQuery(sql, params);
+		Cursor resultSet = db.rawQuery(sql, null); //, params);
 
-		resultSet.moveToFirst(); // must inclide
+		resultSet.moveToFirst(); // must include
 		while (!resultSet.isAfterLast()) {
-			String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
+			//String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
 			String surname = resultSet.getString(resultSet.getColumnIndex("surname"));
+
+			Log.e("Surname", surname);
 
 			resultSet.moveToNext();
 		}
 	}
-	*/
 
 }
 
