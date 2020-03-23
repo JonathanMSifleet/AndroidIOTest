@@ -6,11 +6,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class myDatabase extends SQLiteOpenHelper {
 
-	private static final String DATABASE_NAME = "data.sqlite";
+	private static final String DATABASE_NAME = "data.sqlite"; // or use for external storage Environment.getExternalStorageDirectory() + "/data.sqlite";
 	private static final int VERSION = 1;
 
 	public myDatabase(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
+		SQLiteDatabase db = getWritableDatabase();
 	}
 
 	@Override

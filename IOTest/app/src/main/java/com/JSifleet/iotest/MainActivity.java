@@ -4,10 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -21,7 +18,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 	Button saveTime;
 	Button displayTime;
 	TextView dateOutput;
-	//myDatabase databaseToUse = new myDatabase(null);
+	myDatabase databaseToUse;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 			}
 		} else if (v.getId() == R.id.displayTime) {
 			this.displayTime();
+		} else if (v.getId() == R.id.createDatabase) {
+			this.handleDatabase();
 		}
 	}
 
@@ -103,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
 		FileOutputStream fos;
 
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		//Date dateToConvert = new Date(System.currentTimeMillis());
 		String dateToWrite = formatter.format(System.currentTimeMillis());
 
 		byte[] data = new String(dateToWrite).getBytes();
@@ -130,6 +127,15 @@ public class MainActivity extends AppCompatActivity {
 			return true;
 		}
 		return false;
+	}
+
+	public void handleDatabase() {
+		try {
+			databaseToUse = new myDatabase(this);
+			Log.e("Message", "Database created");
+		} catch (Exception e) {
+			Log.e("Message", "error");
+		}
 	}
 
 	/*
