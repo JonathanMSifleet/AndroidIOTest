@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
 			}
 		} catch (Exception e) {
 			Log.e("Message", "Error reading database");
+			dateOutput.setText("Database is closed");
 		}
 	}
 
