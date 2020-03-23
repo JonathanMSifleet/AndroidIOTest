@@ -11,16 +11,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="315dp"
+        android:layout_marginTop="27dp"
         android:layout_marginEnd="160dp"
-        android:layout_marginBottom="368dp"
+        android:layout_marginBottom="492dp"
         android:onClick="onClick"
         android:text="Save time"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/dateOutput" />
 
     <TextView
         android:id="@+id/dateOutput"
@@ -29,7 +29,7 @@
         android:layout_marginStart="99dp"
         android:layout_marginTop="65dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="151dp"
+        android:layout_marginBottom="27dp"
         android:hint="Data here"
         app:layout_constraintBottom_toTopOf="@+id/saveTime"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,43 +41,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="124dp"
-        android:layout_marginTop="53dp"
+        android:layout_marginTop="31dp"
         android:layout_marginEnd="133dp"
-        android:layout_marginBottom="267dp"
+        android:layout_marginBottom="404dp"
         android:onClick="onClick"
         android:text="Display last time"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saveTime" />
-
-    <Button
-        android:id="@+id/createDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="130dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginEnd="130dp"
-        android:layout_marginBottom="165dp"
-        android:onClick="onClick"
-        android:text="Create database"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/displayTime" />
 
     <Button
         android:id="@+id/readDatabase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="138dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="63dp"
         android:layout_marginEnd="139dp"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="156dp"
         android:onClick="onClick"
         android:text="Read database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createDatabase" />
+        app:layout_constraintTop_toBottomOf="@+id/displayTime"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/closeDatabase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="156dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="167dp"
+        android:layout_marginBottom="193dp"
+        android:onClick="onClick"
+        android:text="Close Database"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/readDatabase" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 	TextView dateOutput;
 	myDatabase databaseToUse;
 	Button readDatabase;
+	Button closeDatabase;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +39,35 @@ public class MainActivity extends AppCompatActivity {
 		displayTime = (Button) this.findViewById(R.id.displayTime);
 		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
 		readDatabase = (Button) this.findViewById(R.id.readDatabase);
+		closeDatabase = (Button) this.findViewById(R.id.closeDatabase);
+
+		try {
+			this.createDatabase();
+			Log.e("Message", "Success");
+		} catch (Exception e) {
+			Log.e("Message", "Error");
+		}
 	}
 
 	public void onClick(View v) {
-		if (v.getId() == R.id.saveTime) {
-			if (isExternalStorageWritable()) {
-				this.checkPermissions();
-				this.saveTimeToFS();
-			} else {
-				Log.e("Message", "Cannot write to fs");
-			}
-		} else if (v.getId() == R.id.displayTime) {
-			this.displayTime();
-		} else if (v.getId() == R.id.createDatabase) {
-			this.handleDatabase();
-		} else if (v.getId() == R.id.readDatabase) {
-			this.getSurname(databaseToUse.db);
+		switch (v.getId()) {
+			case R.id.saveTime:
+				if (isExternalStorageWritable()) {
+					this.checkPermissions();
+					this.saveTimeToFS();
+				} else {
+					Log.e("Message", "Cannot write to fs");
+				}
+				break;
+			case R.id.displayTime:
+				this.displayTime();
+				break;
+			case R.id.readDatabase:
+				this.getSurname(databaseToUse.db);
+				break;
+			case R.id.closeDatabase:
+				databaseToUse.close();
+				break;
 		}
 	}
 
@@ -136,52 +149,36 @@ public class MainActivity extends AppCompatActivity {
 		return false;
 	}
 
-	public void handleDatabase() {
+	public void createDatabase() {
 		try {
 			databaseToUse = new myDatabase(this);
 			Log.e("Message", "Database created");
-			this.insertDummyData(databaseToUse.db);
 		} catch (Exception e) {
 			Log.e("Message", "error");
 		}
 	}
 
-	public void insertDummyData(SQLiteDatabase db) {
-
-		try {
-			ContentValues values = new ContentValues();
-			values.put("surname", "Sifleet");
-			values.put("forename", "Jonathan");
-
-			// don't worry about the 2nd parameter being null
-			// returns the last insert id
-			long insertId = db.insert("testTable", null, values);
-
-			// or for an update - returns # of rows updated
-			// third parameter is the WHERE clause:
-			int rows = db.update("testTable", values, null, null);
-			Log.e("Message", "Data inserted successfully");
-		} catch (Exception e) {
-			Log.e("Message", "Error inserting data");
-		}
-	}
-
 	public void getSurname(SQLiteDatabase db) {
-		String sql = "SELECT surname FROM testTable;"; //" WHERE something = ? AND somethingelse = ?;";
-		/* String[] params = new String[2];
-		params[0] = "firstParameterValue";
-		params[1] = "42"; */
+		try {
+			String sql = "SELECT forename, surname FROM testTable;"; //" WHERE something = ? AND somethingelse = ?;";
+			// String[] params = new String[2];
+			// params[0] = "firstParameterValue";
+			// params[1] = "42";
 
-		Cursor resultSet = db.rawQuery(sql, null); //, params);
+			Cursor resultSet = db.rawQuery(sql, null); //, params);
 
-		resultSet.moveToFirst(); // must include
-		while (!resultSet.isAfterLast()) {
-			//String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
-			String surname = resultSet.getString(resultSet.getColumnIndex("surname"));
+			dateOutput.setText("");
 
-			Log.e("Surname", surname);
+			resultSet.moveToFirst(); // must include
+			while (!resultSet.isAfterLast()) {
+				String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
+				String surname = resultSet.getString(resultSet.getColumnIndex("surname"));
 
-			resultSet.moveToNext();
+				dateOutput.append(forename + " " + surname + "\n");
+				resultSet.moveToNext();
+			}
+		} catch (Exception e) {
+			Log.e("Message", "Error reading database");
 		}
 	}
 
