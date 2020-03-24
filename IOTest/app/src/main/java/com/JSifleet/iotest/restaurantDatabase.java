@@ -21,7 +21,7 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String createStatement = "CREATE TABLE IF NOT EXISTS restaurants (id INTEGER PRIMARY KEY, BusinessName TEXT, AddressLine1 TEXT, AddressLine2 TEXT, AddressLine3 TEXT, PostCode TEXT, RatingValue INTEGER, RatingDate TEXT, DistanceKM REAL)";
+		String createStatement = "CREATE TABLE IF NOT EXISTS restaurants (id INTEGER, BusinessName TEXT, AddressLine1 TEXT, AddressLine2 TEXT, AddressLine3 TEXT, PostCode TEXT, RatingValue INTEGER, RatingDate TEXT, DistanceKM REAL)";
 		db.execSQL(createStatement);
 	}
 
@@ -32,10 +32,12 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 	}
 
 	public void insertRestaurants(SQLiteDatabase db, ArrayList<Integer> ids, ArrayList<String> businessNames, ArrayList<String> addressLine1s, ArrayList<String> addressLine2s, ArrayList<String> addressLine3s, ArrayList<String> postCodes, ArrayList<Integer> hygieneRatings, ArrayList<String> ratingDates, ArrayList<Double> distances) {
+
 		try {
 			for (int i = 0; i < ids.size(); i++) {
 
 				ContentValues values = new ContentValues();
+				Log.e("ID to insert", ids.get(i).toString());
 				values.put("id", ids.get(i));
 				values.put("BusinessName", businessNames.get(i));
 				values.put("AddressLine1", addressLine1s.get(i));

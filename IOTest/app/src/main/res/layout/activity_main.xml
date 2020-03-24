@@ -69,4 +69,19 @@
         app:layout_constraintTop_toBottomOf="@+id/writeDatabase"
         app:layout_constraintVertical_bias="0.0" />
 
+    <Button
+        android:id="@+id/openDatabase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="134dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="141dp"
+        android:layout_marginBottom="161dp"
+        android:onClick="onClick"
+        android:text="Open database"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closeDatabase" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

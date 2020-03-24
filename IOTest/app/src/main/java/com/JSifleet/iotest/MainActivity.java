@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 	restaurantDatabase databaseToUse;
 	Button writeDatabase;
 	Button closeDatabase;
+	Button openDatabase;
 	HygieneWebServiceClient hWSC = new HygieneWebServiceClient();
 
 	Double lat = 0.0;
@@ -55,15 +56,11 @@ public class MainActivity extends AppCompatActivity {
 		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
 		writeDatabase = (Button) this.findViewById(R.id.writeDatabase);
 		closeDatabase = (Button) this.findViewById(R.id.closeDatabase);
+		openDatabase = (Button) this.findViewById(R.id.openDatabase);
 
 		this.getLocation();
+		this.initialiseDatabase();
 
-		try {
-			this.createDatabase();
-			Log.e("Message", "Success");
-		} catch (Exception e) {
-			Log.e("Message", "Error");
-		}
 	}
 
 	public void onClick(View v) {
@@ -90,6 +87,14 @@ public class MainActivity extends AppCompatActivity {
 			case R.id.closeDatabase:
 				databaseToUse.close();
 				Log.e("Message", "Database has closed");
+				break;
+			case R.id.openDatabase:
+				try {
+					this.initialiseDatabase();
+					Log.e("Message", "Success opening database");
+				} catch (Exception e) {
+					Log.e("Message", "Error opening database");
+				}
 				break;
 		}
 	}
@@ -229,13 +234,13 @@ public class MainActivity extends AppCompatActivity {
 			fos.write(data);
 			fos.flush();
 			fos.close();
-			Log.e("Message", "Data written");
+			Log.e("Message", "JSON written");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			Log.e("Message", "Data not written");
+			Log.e("Message", "JSON not written");
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
-			Log.e("Message", "Data not written");
+			Log.e("Message", "JSON not written");
 		}
 	}
 
@@ -248,12 +253,12 @@ public class MainActivity extends AppCompatActivity {
 		return false;
 	}
 
-	public void createDatabase() {
+	public void initialiseDatabase() {
 		try {
 			databaseToUse = new restaurantDatabase(this);
-			Log.e("Message", "Database created");
+			Log.e("Message", "Database initialised");
 		} catch (Exception e) {
-			Log.e("Message", "error");
+			Log.e("Message", "Error initialising database");
 		}
 	}
 
