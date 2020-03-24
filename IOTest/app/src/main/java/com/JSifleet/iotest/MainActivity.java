@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 	Button getLocalRestaurants;
 	Button readJSON;
 	TextView dateOutput;
-	myDatabase databaseToUse;
+	restaurantDatabase databaseToUse;
 	Button readDatabase;
 	Button closeDatabase;
 	HygieneWebServiceClient hWSC = new HygieneWebServiceClient();
@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
 		for (int i = 0; i < restaurants.length(); i++) {
 			try {
 				JSONObject jo = restaurants.getJSONObject(i);
-				Restaurant r = new Restaurant();
-
-				Log.e("Restaurant", jo.getString("BusinessName") + ", rating: " + jo.getString("RatingValue"));
+				Log.e("Restaurant", jo.toString());
+				break;
+				//jo.getString("BusinessName")
 			} catch (JSONException e) {
 				Log.e("Error", "Something has gone wrong");
 				e.printStackTrace();
@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
 
 	public void createDatabase() {
 		try {
-			databaseToUse = new myDatabase(this);
+			databaseToUse = new restaurantDatabase(this);
 			Log.e("Message", "Database created");
 		} catch (Exception e) {
 			Log.e("Message", "error");

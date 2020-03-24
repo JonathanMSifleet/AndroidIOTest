@@ -6,13 +6,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class myDatabase extends SQLiteOpenHelper {
+public class restaurantDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "data.sqlite"; // or use for external storage Environment.getExternalStorageDirectory() + "/data.sqlite";
 	private static final int VERSION = 1;
 	public SQLiteDatabase db;
 
-	public myDatabase(Context context) {
+	public restaurantDatabase(Context context) {
 		super(context, DATABASE_NAME, null, VERSION);
 		this.db = getWritableDatabase(); // required for database to save
 	}
