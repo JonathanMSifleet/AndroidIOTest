@@ -37,18 +37,6 @@ public class HygieneWebServiceClient {
 
 				return new JSONArray(json);
 
-				/* for (int i = 0; i < ja.length(); i++) {
-					JSONObject jo = ja.getJSONObject(i);
-
-					//Restaurant r = new Restaurant();
-					//r.setName(jo.getString("BusinessName"));
-					//r.setHygieneRating(Integer.parseInt(jo.getString("RatingValue")));
-
-					Log.e("JSONObject", jo.getString("BusinessName")+ jo.getString("RatingValue"));
-
-					//listItems.add(r);
-				} */
-
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (JSONException e) {

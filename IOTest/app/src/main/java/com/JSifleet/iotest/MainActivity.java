@@ -19,18 +19,24 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
 	Button getLocalRestaurants;
-	Button displayTime;
+	Button readJSON;
 	TextView dateOutput;
 	myDatabase databaseToUse;
 	Button readDatabase;
@@ -41,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
 	Double lng = 0.0;
 	boolean gotLocation = false;
 
+	JSONArray jsonRestaurants;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 		StrictMode.setThreadPolicy(policy);
 
 		getLocalRestaurants = (Button) this.findViewById(R.id.getLocalRestaurants);
-		displayTime = (Button) this.findViewById(R.id.displayTime);
+		readJSON = (Button) this.findViewById(R.id.readJSON);
 		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
 		readDatabase = (Button) this.findViewById(R.id.readDatabase);
 		closeDatabase = (Button) this.findViewById(R.id.closeDatabase);
@@ -76,15 +84,15 @@ public class MainActivity extends AppCompatActivity {
 				if (checkGotPermission(FSPermissions)) {
 					if (isExternalStorageWritable()) {
 						JSONArray jsonRestaurants = hWSC.getRestaurantsFromLocation(lat, lng);
-						saveRestaurantsToFS(jsonRestaurants);
-						Log.e("Success", "Wrote to fs");
+						writeRestaurantsToFS("restaurants.json", jsonRestaurants);
 					} else {
 						Log.e("Message", "Cannot write to fs");
 					}
 				}
 				break;
-			case R.id.displayTime:
-				this.displayTime();
+			case R.id.readJSON:
+				jsonRestaurants = this.readJSON("restaurants.json");
+				this.logRestaurants(jsonRestaurants);
 				break;
 			case R.id.readDatabase:
 				this.getSurname(databaseToUse.db);
@@ -153,31 +161,55 @@ public class MainActivity extends AppCompatActivity {
 		return false;
 	}
 
-	public void displayTime() {
+	public JSONArray readJSON(String filename) {
+		File file = new File(Environment.getExternalStorageDirectory(), "IOTest/" + filename);
 
-		File file = new File(Environment.getExternalStorageDirectory(), "filename.txt");
-		ArrayList<String> readLines = new ArrayList<>();
+		String json = "";
 		try {
-			Scanner in = new Scanner(file);
-			while (in.hasNextLine()) {
-				readLines.add(in.nextLine());
-			}
-			in.close();
-		} catch (FileNotFoundException e) {
+			InputStream is = new FileInputStream(file);
+			int size = is.available();
+			byte[] buffer = new byte[size];
+			is.read(buffer);
+			is.close();
+			json = new String(buffer, "UTF-8");
+			Log.e("JSON", json);
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+		}
+
+		try {
+			return new JSONArray(json);
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 
-		for (String line : readLines) {
-			Log.e("Debug message", line);
-		}
-
-		dateOutput.setText(readLines.get(0));
-
+		return new JSONArray();
 	}
 
-	public void saveRestaurantsToFS(JSONArray jsonArray) {
-		String filneame = "restaurants.json";
-		File file = new File(Environment.getExternalStorageDirectory(), filneame);
+	public void logRestaurants(JSONArray restaurants) {
+
+		for (int i = 0; i < restaurants.length(); i++) {
+			try {
+				JSONObject jo = restaurants.getJSONObject(i);
+				Restaurant r = new Restaurant();
+
+				Log.e("Restaurant", jo.getString("BusinessName") + ", rating: " + jo.getString("RatingValue"));
+			} catch (JSONException e) {
+				Log.e("Error", "Something has gone wrong");
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void writeRestaurantsToFS(String filename, JSONArray jsonArray) {
+
+		File folder = new File(Environment.getExternalStorageDirectory(), "/IOTest");
+
+		if (!folder.exists()) {
+			folder.mkdirs();
+		}
+
+		File file = new File(Environment.getExternalStorageDirectory(), "IOTest/" + filename);
 		FileOutputStream fos;
 
 		byte[] data = new String(jsonArray.toString()).getBytes();

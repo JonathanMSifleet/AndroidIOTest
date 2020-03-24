@@ -11,13 +11,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="99dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="48dp"
         android:layout_marginEnd="113dp"
-        android:layout_marginBottom="37dp"
         android:onClick="onClick"
         android:text="Get Local Restaurants"
-        app:layout_constraintBottom_toTopOf="@+id/displayTime"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateOutput" />
 
@@ -36,37 +35,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/displayTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="124dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="133dp"
-        android:layout_marginBottom="404dp"
-        android:onClick="onClick"
-        android:text="Display last time"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getLocalRestaurants" />
-
-    <Button
         android:id="@+id/readDatabase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="138dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="34dp"
         android:layout_marginEnd="139dp"
-        android:layout_marginBottom="156dp"
+        android:layout_marginBottom="296dp"
         android:onClick="onClick"
         android:text="Read database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/displayTime"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/readJSON" />
 
     <Button
         android:id="@+id/closeDatabase"
@@ -80,6 +62,23 @@
         android:text="Close Database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.407"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/readDatabase" />
+        app:layout_constraintTop_toBottomOf="@+id/readDatabase"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/readJSON"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="158dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="165dp"
+        android:layout_marginBottom="34dp"
+        android:onClick="onClick"
+        android:text="Read JSON"
+        app:layout_constraintBottom_toTopOf="@+id/readDatabase"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/getLocalRestaurants" />
 </androidx.constraintlayout.widget.ConstraintLayout>
