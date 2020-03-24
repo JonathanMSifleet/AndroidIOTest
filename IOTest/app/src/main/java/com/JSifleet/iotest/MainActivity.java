@@ -1,12 +1,7 @@
 package com.JSifleet.iotest;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,6 +13,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,20 +24,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
-	Button getLocalRestaurants;
-	Button readJSON;
+	Button getRestaurants;
 	TextView dateOutput;
 	restaurantDatabase databaseToUse;
-	Button readDatabase;
+	Button writeDatabase;
 	Button closeDatabase;
 	HygieneWebServiceClient hWSC = new HygieneWebServiceClient();
 
@@ -57,10 +51,9 @@ public class MainActivity extends AppCompatActivity {
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
 
-		getLocalRestaurants = (Button) this.findViewById(R.id.getLocalRestaurants);
-		readJSON = (Button) this.findViewById(R.id.readJSON);
+		getRestaurants = (Button) this.findViewById(R.id.getRestaurants);
 		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
-		readDatabase = (Button) this.findViewById(R.id.readDatabase);
+		writeDatabase = (Button) this.findViewById(R.id.writeDatabase);
 		closeDatabase = (Button) this.findViewById(R.id.closeDatabase);
 
 		this.getLocation();
@@ -75,10 +68,10 @@ public class MainActivity extends AppCompatActivity {
 
 	public void onClick(View v) {
 		switch (v.getId()) {
-			case R.id.getLocalRestaurants:
+			case R.id.getRestaurants:
 				String[] FSPermissions = {
 						Manifest.permission.READ_EXTERNAL_STORAGE,
-						Manifest.permission.WRITE_EXTERNAL_STORAGE,
+						Manifest.permission.WRITE_EXTERNAL_STORAGE
 				};
 
 				if (checkGotPermission(FSPermissions)) {
@@ -90,15 +83,13 @@ public class MainActivity extends AppCompatActivity {
 					}
 				}
 				break;
-			case R.id.readJSON:
+			case R.id.writeDatabase:
 				jsonRestaurants = this.readJSON("restaurants.json");
-				this.logRestaurants(jsonRestaurants);
-				break;
-			case R.id.readDatabase:
-				this.getSurname(databaseToUse.db);
+				this.saveJSONToDB(jsonRestaurants);
 				break;
 			case R.id.closeDatabase:
 				databaseToUse.close();
+				Log.e("Message", "Database has closed");
 				break;
 		}
 	}
@@ -172,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
 			is.read(buffer);
 			is.close();
 			json = new String(buffer, "UTF-8");
-			Log.e("JSON", json);
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
@@ -186,19 +176,39 @@ public class MainActivity extends AppCompatActivity {
 		return new JSONArray();
 	}
 
-	public void logRestaurants(JSONArray restaurants) {
+	public void saveJSONToDB(JSONArray restaurants) {
+
+		ArrayList<Integer> ids = new ArrayList<>();
+		ArrayList<String> businessNames = new ArrayList<>();
+		ArrayList<String> addressLine1s = new ArrayList<>();
+		ArrayList<String> addressLine2s = new ArrayList<>();
+		ArrayList<String> addressLine3s = new ArrayList<>();
+		ArrayList<String> postCodes = new ArrayList<>();
+		ArrayList<Integer> hygieneRatings = new ArrayList<>();
+		ArrayList<String> ratingDates = new ArrayList<>();
+		ArrayList<Double> distances = new ArrayList<>();
 
 		for (int i = 0; i < restaurants.length(); i++) {
 			try {
 				JSONObject jo = restaurants.getJSONObject(i);
-				Log.e("Restaurant", jo.toString());
-				break;
-				//jo.getString("BusinessName")
+
+				ids.add(jo.getInt("id"));
+				businessNames.add(jo.getString("BusinessName"));
+				addressLine1s.add(jo.getString("AddressLine1"));
+				addressLine2s.add(jo.getString("AddressLine2"));
+				addressLine3s.add(jo.getString("AddressLine3"));
+				postCodes.add(jo.getString("PostCode"));
+				hygieneRatings.add(jo.getInt("RatingValue"));
+				ratingDates.add(jo.getString("RatingDate"));
+				distances.add(jo.getDouble("DistanceKM"));
 			} catch (JSONException e) {
 				Log.e("Error", "Something has gone wrong");
 				e.printStackTrace();
 			}
 		}
+
+		databaseToUse.insertRestaurants(databaseToUse.db, ids, businessNames, addressLine1s, addressLine2s, addressLine3s, postCodes, hygieneRatings, ratingDates, distances);
+
 	}
 
 	public void writeRestaurantsToFS(String filename, JSONArray jsonArray) {
@@ -247,9 +257,10 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	public void getSurname(SQLiteDatabase db) {
+	/*
+	public void readDatabase(SQLiteDatabase db) {
 		try {
-			String sql = "SELECT forename, surname FROM testTable;"; //" WHERE something = ? AND somethingelse = ?;";
+			String sql = "SELECT id, BusinessName, AddressLine1, AddressLine2, AddressLine3, PostCode, RatingValue, RatingDate, DistanceKM FROM restaurants;"; //" WHERE something = ? AND somethingelse = ?;";
 			// String[] params = new String[2];
 			// params[0] = "firstParameterValue";
 			// params[1] = "42";
@@ -260,17 +271,34 @@ public class MainActivity extends AppCompatActivity {
 
 			resultSet.moveToFirst(); // must include
 			while (!resultSet.isAfterLast()) {
-				String forename = resultSet.getString(resultSet.getColumnIndex("forename"));
-				String surname = resultSet.getString(resultSet.getColumnIndex("surname"));
+				String id = resultSet.getString(resultSet.getColumnIndex("id"));
+				String businessName = resultSet.getString(resultSet.getColumnIndex("BusinessName"));
+				String addressLine1 = resultSet.getString(resultSet.getColumnIndex("AddressLine1"));
+				String addressLine2 = resultSet.getString(resultSet.getColumnIndex("AddressLine2"));
+				String addressLine3 = resultSet.getString(resultSet.getColumnIndex("AddressLine3"));
+				String postCode = resultSet.getString(resultSet.getColumnIndex("PostCode"));
+				String hygieneRating = resultSet.getString(resultSet.getColumnIndex("RatingValue"));
+				String ratingDate = resultSet.getString(resultSet.getColumnIndex("RatingDate"));
+				String distanceKM = resultSet.getString(resultSet.getColumnIndex("DistanceKM"));
 
-				dateOutput.append(forename + " " + surname + "\n");
+				dateOutput.append(id + "\n");
+				dateOutput.append(businessName + "\n");
+				dateOutput.append(addressLine1 + "\n");
+				dateOutput.append(addressLine2 + "\n");
+				dateOutput.append(addressLine3 + "\n");
+				dateOutput.append(postCode + "\n");
+				dateOutput.append(hygieneRating + "\n");
+				dateOutput.append(ratingDate + "\n");
+				dateOutput.append(distanceKM + "\n");
+
 				resultSet.moveToNext();
+				break;
 			}
 		} catch (Exception e) {
 			Log.e("Message", "Error reading database");
 			dateOutput.setText("Database is closed");
 		}
-	}
+	} */
 
 }
 
