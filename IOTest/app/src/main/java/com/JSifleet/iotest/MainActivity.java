@@ -82,7 +82,10 @@ public class MainActivity extends AppCompatActivity {
 				break;
 			case R.id.writeDatabase:
 				jsonRestaurants = this.readJSON("restaurants.json");
-				this.saveJSONToDB(jsonRestaurants);
+				ArrayList<Restaurant> listOfRestaurants = this.saveJSONToArrayList(jsonRestaurants);
+
+				databaseToUse.insertRestaurants(databaseToUse.db, listOfRestaurants );
+
 				break;
 			case R.id.closeDatabase:
 				databaseToUse.close();
@@ -181,39 +184,32 @@ public class MainActivity extends AppCompatActivity {
 		return new JSONArray();
 	}
 
-	public void saveJSONToDB(JSONArray restaurants) {
+	public ArrayList<Restaurant> saveJSONToArrayList(JSONArray restaurants) {
 
-		ArrayList<Integer> ids = new ArrayList<>();
-		ArrayList<String> businessNames = new ArrayList<>();
-		ArrayList<String> addressLine1s = new ArrayList<>();
-		ArrayList<String> addressLine2s = new ArrayList<>();
-		ArrayList<String> addressLine3s = new ArrayList<>();
-		ArrayList<String> postCodes = new ArrayList<>();
-		ArrayList<Integer> hygieneRatings = new ArrayList<>();
-		ArrayList<String> ratingDates = new ArrayList<>();
-		ArrayList<Double> distances = new ArrayList<>();
+		ArrayList<Restaurant> listOfRestaurants = new ArrayList<>();
+		try {
+			for (int i = 0; i < restaurants.length(); i++) {
+				Restaurant tempRestaurant = new Restaurant();
 
-		for (int i = 0; i < restaurants.length(); i++) {
-			try {
 				JSONObject jo = restaurants.getJSONObject(i);
 
-				ids.add(jo.getInt("id"));
-				businessNames.add(jo.getString("BusinessName"));
-				addressLine1s.add(jo.getString("AddressLine1"));
-				addressLine2s.add(jo.getString("AddressLine2"));
-				addressLine3s.add(jo.getString("AddressLine3"));
-				postCodes.add(jo.getString("PostCode"));
-				hygieneRatings.add(jo.getInt("RatingValue"));
-				ratingDates.add(jo.getString("RatingDate"));
-				distances.add(jo.getDouble("DistanceKM"));
-			} catch (JSONException e) {
-				Log.e("Error", "Something has gone wrong");
-				e.printStackTrace();
+				tempRestaurant.setId(jo.getInt("id"));
+				tempRestaurant.setBusinessName(jo.getString("BusinessName"));
+				tempRestaurant.setAddressLine1(jo.getString("AddressLine1"));
+				tempRestaurant.setAddressLine2(jo.getString("AddressLine2"));
+				tempRestaurant.setAddressLine3(jo.getString("AddressLine3"));
+				tempRestaurant.setPostCode(jo.getString("PostCode"));
+				tempRestaurant.setHygieneRating(jo.getInt("RatingValue"));
+				tempRestaurant.setRatingDate(jo.getString("RatingDate"));
+				tempRestaurant.setDistance(jo.getDouble("DistanceKM"));
+				listOfRestaurants.add(tempRestaurant);
 			}
+		} catch (JSONException e) {
+			Log.e("Error", "Something has gone wrong");
+			e.printStackTrace();
 		}
 
-		databaseToUse.insertRestaurants(databaseToUse.db, ids, businessNames, addressLine1s, addressLine2s, addressLine3s, postCodes, hygieneRatings, ratingDates, distances);
-
+		return listOfRestaurants;
 	}
 
 	public void writeRestaurantsToFS(String filename, JSONArray jsonArray) {

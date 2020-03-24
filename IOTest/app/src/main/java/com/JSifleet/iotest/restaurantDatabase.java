@@ -31,22 +31,22 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 		this.onCreate(db);
 	}
 
-	public void insertRestaurants(SQLiteDatabase db, ArrayList<Integer> ids, ArrayList<String> businessNames, ArrayList<String> addressLine1s, ArrayList<String> addressLine2s, ArrayList<String> addressLine3s, ArrayList<String> postCodes, ArrayList<Integer> hygieneRatings, ArrayList<String> ratingDates, ArrayList<Double> distances) {
+	public void insertRestaurants(SQLiteDatabase db, ArrayList<Restaurant> listOfRestaurants) {
 
 		try {
-			for (int i = 0; i < ids.size(); i++) {
-
+			for (Restaurant curRestaurant : listOfRestaurants) {
 				ContentValues values = new ContentValues();
-				Log.e("ID to insert", ids.get(i).toString());
-				values.put("id", ids.get(i));
-				values.put("BusinessName", businessNames.get(i));
-				values.put("AddressLine1", addressLine1s.get(i));
-				values.put("AddressLine2", addressLine2s.get(i));
-				values.put("AddressLine3", addressLine3s.get(i));
-				values.put("PostCode", postCodes.get(i));
-				values.put("RatingValue", hygieneRatings.get(i));
-				values.put("RatingDate", ratingDates.get(i));
-				values.put("DistanceKM", distances.get(i));
+
+				Log.e("ID to insert", curRestaurant.getId().toString());
+				values.put("id", curRestaurant.getId());
+				values.put("BusinessName", curRestaurant.getBusinessName());
+				values.put("AddressLine1", curRestaurant.getAddressLine1());
+				values.put("AddressLine2", curRestaurant.getAddressLine2());
+				values.put("AddressLine3", curRestaurant.getAddressLine3());
+				values.put("PostCode", curRestaurant.getPostCode());
+				values.put("RatingValue", curRestaurant.getHygieneRating());
+				values.put("RatingDate", curRestaurant.getRatingDate());
+				values.put("DistanceKM", curRestaurant.getDistance());
 
 				// don't worry about the 2nd parameter being null
 				// returns the last insert id
