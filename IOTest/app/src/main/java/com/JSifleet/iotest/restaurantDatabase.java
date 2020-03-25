@@ -54,7 +54,7 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 
 				// or for an update - returns # of rows updated
 				// third parameter is the WHERE clause:
-				int rows = db.update("restaurants", values, null, null);
+				//int rows = db.update("restaurants", values, null, null);
 				Log.e("Message", "Data inserted successfully");
 			}
 		} catch (Exception e) {
