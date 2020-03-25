@@ -37,7 +37,6 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 			for (Restaurant curRestaurant : listOfRestaurants) {
 				ContentValues values = new ContentValues();
 
-				Log.e("ID to insert", curRestaurant.getId().toString());
 				values.put("id", curRestaurant.getId());
 				values.put("BusinessName", curRestaurant.getBusinessName());
 				values.put("AddressLine1", curRestaurant.getAddressLine1());
@@ -55,8 +54,8 @@ public class restaurantDatabase extends SQLiteOpenHelper {
 				// or for an update - returns # of rows updated
 				// third parameter is the WHERE clause:
 				//int rows = db.update("restaurants", values, null, null);
-				Log.e("Message", "Data inserted successfully");
 			}
+			Log.e("Message", "Data inserted successfully");
 		} catch (Exception e) {
 			Log.e("Message", "Error inserting data");
 		}

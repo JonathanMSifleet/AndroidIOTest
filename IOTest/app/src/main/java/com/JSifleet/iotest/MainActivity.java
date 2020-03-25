@@ -2,6 +2,8 @@ package com.JSifleet.iotest;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,9 +33,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
 	Button getRestaurants;
-	TextView dateOutput;
+	TextView dataOutput;
 	restaurantDatabase databaseToUse;
 	Button writeDatabase;
+	Button readDatabase;
 	Button closeDatabase;
 	Button openDatabase;
 	HygieneWebServiceClient hWSC = new HygieneWebServiceClient();
@@ -53,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
 		StrictMode.setThreadPolicy(policy);
 
 		getRestaurants = (Button) this.findViewById(R.id.getRestaurants);
-		dateOutput = (TextView) this.findViewById(R.id.dateOutput);
+		dataOutput = (TextView) this.findViewById(R.id.dataOutput);
 		writeDatabase = (Button) this.findViewById(R.id.writeDatabase);
+		readDatabase = (Button) this.findViewById(R.id.readDatabase);
 		closeDatabase = (Button) this.findViewById(R.id.closeDatabase);
 		openDatabase = (Button) this.findViewById(R.id.openDatabase);
 
@@ -83,9 +87,11 @@ public class MainActivity extends AppCompatActivity {
 			case R.id.writeDatabase:
 				jsonRestaurants = this.readJSON("restaurants.json");
 				ArrayList<Restaurant> listOfRestaurants = this.saveJSONToArrayList(jsonRestaurants);
-
-				databaseToUse.insertRestaurants(databaseToUse.db, listOfRestaurants );
-
+				databaseToUse.insertRestaurants(databaseToUse.db, listOfRestaurants);
+				break;
+			case R.id.readDatabase:
+				Log.e("Message", "Click!");
+				this.readDatabase(databaseToUse.db);
 				break;
 			case R.id.closeDatabase:
 				databaseToUse.close();
@@ -258,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
 		}
 	}
 
-	/*
 	public void readDatabase(SQLiteDatabase db) {
 		try {
 			String sql = "SELECT id, BusinessName, AddressLine1, AddressLine2, AddressLine3, PostCode, RatingValue, RatingDate, DistanceKM FROM restaurants;"; //" WHERE something = ? AND somethingelse = ?;";
@@ -268,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
 			Cursor resultSet = db.rawQuery(sql, null); //, params);
 
-			dateOutput.setText("");
+			dataOutput.setText("");
 
 			resultSet.moveToFirst(); // must include
 			while (!resultSet.isAfterLast()) {
@@ -282,24 +287,24 @@ public class MainActivity extends AppCompatActivity {
 				String ratingDate = resultSet.getString(resultSet.getColumnIndex("RatingDate"));
 				String distanceKM = resultSet.getString(resultSet.getColumnIndex("DistanceKM"));
 
-				dateOutput.append(id + "\n");
-				dateOutput.append(businessName + "\n");
-				dateOutput.append(addressLine1 + "\n");
-				dateOutput.append(addressLine2 + "\n");
-				dateOutput.append(addressLine3 + "\n");
-				dateOutput.append(postCode + "\n");
-				dateOutput.append(hygieneRating + "\n");
-				dateOutput.append(ratingDate + "\n");
-				dateOutput.append(distanceKM + "\n");
+				dataOutput.append(id + "\n");
+				dataOutput.append(businessName + "\n");
+				dataOutput.append(addressLine1 + "\n");
+				dataOutput.append(addressLine2 + "\n");
+				dataOutput.append(addressLine3 + "\n");
+				dataOutput.append(postCode + "\n");
+				dataOutput.append(hygieneRating + "\n");
+				dataOutput.append(ratingDate + "\n");
+				dataOutput.append(distanceKM + "\n");
 
 				resultSet.moveToNext();
 				break;
 			}
 		} catch (Exception e) {
 			Log.e("Message", "Error reading database");
-			dateOutput.setText("Database is closed");
+			dataOutput.setText("Database is closed");
 		}
-	} */
+	}
 
 }
 

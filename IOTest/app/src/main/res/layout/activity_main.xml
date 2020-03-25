@@ -11,24 +11,25 @@
         android:layout_width="198dp"
         android:layout_height="75dp"
         android:layout_marginStart="106dp"
-        android:layout_marginTop="68dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="107dp"
         android:layout_marginBottom="39dp"
         android:onClick="onClick"
         android:text="Get restaurants from location, write to JSON"
         app:layout_constraintBottom_toTopOf="@+id/writeDatabase"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateOutput" />
+        app:layout_constraintTop_toBottomOf="@+id/dataOutput" />
 
     <TextView
-        android:id="@+id/dateOutput"
-        android:layout_width="212dp"
-        android:layout_height="99dp"
+        android:id="@+id/dataOutput"
+        android:layout_width="300dp"
+        android:layout_height="169dp"
         android:layout_marginStart="99dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="100dp"
-        android:layout_marginBottom="27dp"
+        android:layout_marginBottom="15dp"
         android:hint="Data here"
         app:layout_constraintBottom_toTopOf="@+id/getRestaurants"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,46 +43,56 @@
         android:layout_marginStart="138dp"
         android:layout_marginTop="39dp"
         android:layout_marginEnd="139dp"
-        android:layout_marginBottom="380dp"
+        android:layout_marginBottom="320dp"
         android:onClick="onClick"
         android:text="Read JSON from file, insert into database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.565"
+        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/getRestaurants"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/getRestaurants" />
 
     <Button
         android:id="@+id/closeDatabase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="52dp"
         android:layout_marginEnd="167dp"
-        android:layout_marginBottom="193dp"
+        android:layout_marginBottom="108dp"
         android:onClick="onClick"
         android:text="Close Database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.407"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/writeDatabase"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/openDatabase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="134dp"
-        android:layout_marginTop="38dp"
         android:layout_marginEnd="141dp"
-        android:layout_marginBottom="161dp"
+        android:layout_marginBottom="32dp"
         android:onClick="onClick"
         android:text="Open database"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/readDatabase"
+        android:layout_width="192dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="107dp"
+        android:layout_marginBottom="45dp"
+        android:onClick="onClick"
+        android:text="Read database"
+        app:layout_constraintBottom_toTopOf="@+id/closeDatabase"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/closeDatabase" />
+        app:layout_constraintTop_toBottomOf="@+id/writeDatabase" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
